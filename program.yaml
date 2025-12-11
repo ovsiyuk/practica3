@@ -1,0 +1,5 @@
+program:
+  - load_const: 477
+  - read_mem: 809
+  - write_mem:
+  - bitreverse: 55
