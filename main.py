@@ -59,7 +59,14 @@ class Assembler:
         return intermediate
 
     @staticmethod
-    def assemble_to_binary(intermediate):
+    def bytes_to_binary_string(byte_data):
+        """Конвертирует байты в строку бинарного представления"""
+        binary_str = ""
+        for byte in byte_data:
+            binary_str += format(byte, '08b')
+        return binary_str
+
+    def assemble_to_binary(self, intermediate):
         binary_data = bytearray()
 
         for instr in intermediate:
@@ -80,7 +87,7 @@ class Assembler:
                 value = (operand << 5) | opcode
                 binary_data.extend(struct.pack('<I', value)[:3])
 
-        return bytes(binary_data)
+        return self.bytes_to_binary_string(binary_data)
 
     @staticmethod
     def format_instruction(instr):
@@ -133,10 +140,13 @@ def main():
                 print(f"Инструкция {i}: {assembler.format_instruction(instr)}")
             print("=" * 50)
             print(f"Число ассемблированных команд: {num_commands}")
+            print(f"Двоичный код (первые 100 символов): {binary_code[:100]}...")
         else:
-            with open(args.output_file, 'wb') as f:
+            # Записываем двоичное текстовое представление
+            with open(args.output_file, 'w', encoding='utf-8') as f:
                 f.write(binary_code)
             print(f"Число ассемблированных команд: {num_commands}")
+            print(f"Длина двоичного кода: {len(binary_code)} бит")
 
     except FileNotFoundError:
         print(f"Ошибка: файл {args.input_file} не найден")
